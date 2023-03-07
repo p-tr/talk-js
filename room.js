@@ -20,6 +20,14 @@ const cli = createInterface({ input, output });
         console.log(`(${date.toISOString()}) ${author} > ${message}`);
     });
 
+    socket.on('auth:logout', (username) => {
+        console.log(`${username} leaves the chat...`)
+    })
+
+    socket.on('auth:login', (username) => {
+        console.log(`${username} enters the chat...`)
+    })
+
     socket.emit('auth:room');
 
 })().catch((err) => {

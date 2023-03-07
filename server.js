@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
         usernames[id] = author = username;
         console.log('auth:login-success ' + username);
         socket.emit('auth:login-success', username);
+        rooms.forEach((s) => { s.emit('auth:login', author) })
     });
 
     socket.on('auth:room', () => {
@@ -39,6 +40,7 @@ io.on('connection', (socket) => {
                 delete rooms[idx];
             }
         } else {
+            rooms.forEach((socket) => { socket.emit('auth:logout', author) })
             delete usernames[id];
         }
     });

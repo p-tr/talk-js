@@ -4,7 +4,18 @@ const { createInterface } = require('readline/promises');
 
 const cli = createInterface({ input, output });
 
-cli.stdoutMuted = true;
+function handleCommand(cmd) {
+    switch(cmd) {
+        case '.exit' :
+            cli.close();
+            console.log('Bye !');
+            exit(0);
+            break;
+        default:
+            console.log('Unknown command :/');
+            break;
+    }
+}
 
 (async () => {
     let constr = await cli.question('socket.io connection string (ws://localhost:3000) > ');
@@ -29,7 +40,13 @@ cli.stdoutMuted = true;
 
         while(true) {
             const message = await cli.question(prompt);
-            socket.emit('message', message);
+
+            const startswithdot = /^\./.test(message);
+            if(startswithdot) {
+                handleCommand(message);
+            } else {
+                socket.emit('message', message);
+            }
         }
     })
 
